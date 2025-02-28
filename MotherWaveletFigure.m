@@ -9,7 +9,7 @@ image = zeros(arraySize, arraySize);
 image(arraySize/2, arraySize/2) = 1;
 
 % Pick a NW-SE angle and Scale for visual pleasure
-Angles = pi/4 ;
+Angles = 0: pi/4 ;
 Scales = 20 ;
 
 cwtCauchy = cwtft2(image,wavelet="cauchy",scales=Scales, angles=Angles);
@@ -43,6 +43,26 @@ spec = squeeze( cwtCauchy.cfs );
 % plot( squeeze(real(spec(150,150,:))) );
 projection = squeeze(real(spec(150,150,:)));
 stem( Angles*180/pi, projection/max(projection) ); 
-title('c) angle resolution around 90'); xlabel('degrees')
+title('c) angle resolution for line, pure wave'); xlabel('degrees')
+xlim([60 120])
+hold on; 
+
+
+% Try it for a sinusoidal stripes pattern: wavenumber 10 in 512, scale 25
+arraySize2 = 512;
+% Create the x and y coordinate arrays
+x = 1:arraySize2;
+y = 1:arraySize2;
+[X, Y] = meshgrid(x, y);
+stripes = sin(2 * pi * 10 * Y / arraySize2);
+
+%figure();
+%contourf(stripes); colorbar(); 
+
+cwtCauchy = cwtft2(image,wavelet="cauchy",scales=25, angles=Angles);
+spec = squeeze( cwtCauchy.cfs );
+
+projection = squeeze(real(spec(256,256,:)));
+stem( Angles*180/pi, projection/max(projection) ); %#title('d) angle resolution for pure wave'); xlabel('degrees')
 xlim([60 120])
 
